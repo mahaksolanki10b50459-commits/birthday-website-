@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#240d20">
+<title>A Little Birthday Surprise</title>
+<style>
+:root{--bg:#180d19;--wine:#3b1733;--pink:#f29abb;--cream:#fff3e9;--muted:#d9bdcf}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#512344 0,#211020 48%,#100a13 100%);color:var(--cream);font-family:Georgia,'Times New Roman',serif;min-height:100vh}
+button{font:inherit;cursor:pointer}
+#app{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.slide{display:none;width:min(100%,650px);min-height:75vh;text-align:center;align-items:center;justify-content:center;flex-direction:column;gap:18px;animation:fade .65s ease}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{font:600 11px Arial,sans-serif;letter-spacing:4px;text-transform:uppercase;color:var(--pink)}
+h1{font-size:clamp(38px,9vw,66px);line-height:1.05;margin:4px 0;color:#fff2e9;font-weight:normal}
+h2{font-size:clamp(30px,7vw,44px);font-weight:normal;margin:0}
+p{font:16px/1.7 Arial,sans-serif;color:var(--muted);max-width:520px;margin:0 auto}
+.script{font-style:italic;color:var(--pink)}
+.primary,.secondary{border:1px solid #d98caf;border-radius:999px;padding:13px 24px;background:#e99abb;color:#291326;font:600 14px Arial,sans-serif;letter-spacing:.3px;margin:6px}
+.secondary{background:transparent;color:var(--cream);border-color:#9d6b8c}
+.nav{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.small{font:12px Arial,sans-serif;color:#bfa6b9}
+.photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;margin-top:8px}
+.photo-card{background:#2b1729;border:1px solid #75445f;border-radius:15px;padding:9px;overflow:hidden}
+.photo-card img{width:100%;height:190px;object-fit:cover;border-radius:10px;background:#4a3145;display:block}
+.photo-card p{font:italic 14px Georgia,serif;color:#ffe8f0;padding:10px 3px 3px}
+.future-img{width:min(100%,390px);max-height:420px;object-fit:cover;border-radius:18px;border:1px solid #c987a9;box-shadow:0 12px 40px #0008}
+.letter{background:#2b1729;border:1px solid #75445f;border-radius:18px;padding:22px;text-align:left;font:15px/1.85 Georgia,serif;color:#ffedf3;white-space:pre-line}
+.cake{font-size:100px;filter:drop-shadow(0 8px 15px #0008)}
+.balloons{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:14px}
+.balloon{width:82px;height:105px;border-radius:50% 50% 46% 46%;border:0;color:#321329;background:linear-gradient(135deg,#ffd1e3,#df78a7);box-shadow:inset -9px -8px 0 #a9477c55;position:relative;font-size:25px;transition:.2s}
+.balloon:after{content:"";position:absolute;bottom:-15px;left:38px;border-width:15px 5px 0;border-style:solid;border-color:#e99abb transparent transparent}
+.balloon.popped{transform:scale(.15) rotate(25deg);opacity:0;pointer-events:none}
+.reveal{min-height:58px;color:#ffe2ee;font:italic 18px/1.5 Georgia,serif}
+#music{position:fixed;top:14px;right:14px;border:1px solid #986482;background:#2a1728;color:#fff0f6;border-radius:30px;padding:9px 13px;font:12px Arial,sans-serif}
+@media(max-width:420px){.photo-card img{height:145px}.letter{padding:17px;font-size:14px}}
+</style>
+</head>
+<body>
+<button id="music" onclick="toggleMusic()">♫ Play music</button>
+<audio id="song" loop src="song.mp3"></audio>
+<main id="app">
+<section class="slide active">
+<div class="eyebrow">A little something, just for you</div>
+<h1>Happy Birthday,<br><span class="script">my love</span> ♡</h1>
+<p>One more year of you, and a little collection of moments I’m glad we made.</p>
+<button class="primary" onclick="go(1)">Open your surprise →</button>
+<div class="small">Best experienced with the sound on</div>
+</section>
+
+<section class="slide">
+<div class="eyebrow">Make a wish</div>
+<h2>Your birthday cake 🎂</h2>
+<div class="cake">🎂</div>
+<p id="cakeText">Take a deep breath, make a wish and blow out the candles.</p>
+<button class="primary" onclick="blow()">Blow the candles ✨</button>
+<p class="small">If microphone permission is unavailable, tap the button to blow them out.</p>
+</section>
+
+<section class="slide">
+<div class="eyebrow">Little moments, big memories</div>
+<h2>Us, in four frames</h2>
+<div class="photo-grid">
+<div class="photo-card"><img src="photo1.jpg" alt="Our memory 1"><p>Little moments, big smiles</p></div>
+<div class="photo-card"><img src="photo2.jpg" alt="Our memory 2"><p>Our first garba together</p></div>
+<div class="photo-card"><img src="photo3.jpg" alt="Our memory 3"><p>My favourite kind of closeness</p></div>
+<div class="photo-card"><img src="photo4.jpg" alt="Our memory 4"><p>Just us, being us</p></div>
+</div>
+<p class="small">Replace photo1.jpg to photo4.jpg with your four pictures.</p>
+</section>
+
+<section class="slide">
+<div class="eyebrow">A little push from me</div>
+<h2>Pop a balloon ♡</h2>
+<p>Choose all three. A tiny reminder for the days you need one.</p>
+<div class="balloons">
+<button class="balloon" onclick="pop(this,0)" aria-label="Pop balloon one">♡</button>
+<button class="balloon" onclick="pop(this,1)" aria-label="Pop balloon two">♡</button>
+<button class="balloon" onclick="pop(this,2)" aria-label="Pop balloon three">♡</button>
+</div>
+<div class="reveal" id="reveal">Your little reminders will appear here.</div>
+</section>
+
+<section class="slide">
+<div class="eyebrow">A little dream we're manifesting</div>
+<h2>Our future, someday ♡</h2>
+<img class="future-img" src="future.jpg" alt="Our imagined future family">
+<p>Not a deadline, just a sweet little dream. May we keep growing, chasing our goals and building a life we’re proud of — one step at a time.</p>
+<p class="small">Replace future.jpg with your AI-generated family photo.</p>
+</section>
+
+<section class="slide">
+<div class="eyebrow">A note for your day</div>
+<h2 class="script">To my favourite person,</h2>
+<div class="letter">Happy birthday, love! ❤️
+
+I hope this year brings you closer to everything you’re working for. Keep believing in yourself and going after your dreams — I’ll always be cheering you on.
+
+Thank you for all the laughs, the little moments and the memories we keep making. And yes, you can be Damon, but I’m still keeping Stefan and Klaus. 😂
+
+I hope life is kind to you, your efforts pay off, and you always have reasons to smile. You deserve a future you’re genuinely proud of.
+
+Have the best birthday. 🤍</div>
+<p class="script">With love ♡</p>
+</section>
+
+<section class="slide">
+<div class="eyebrow">One last thing</div>
+<h1>Here's to you<br><span class="script">and all that's ahead.</span></h1>
+<p>Keep becoming everything you dream of. I’m rooting for you, always.</p>
+<div style="font-size:42px">♡ ✨ ♡</div>
+<div class="nav"><button class="secondary" onclick="go(0)">Replay from start ↺</button></div>
+</section>
+</main>
+<script>
+let current=0;
+const slides=[...document.querySelectorAll('.slide')];
+function go(n){slides[current].classList.remove('active');current=Math.max(0,Math.min(n,slides.length-1));slides[current].classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+const thoughts=[
+"You're capable of more than you realise. Keep going.",
+"Your hard work will take you places. Trust your journey.",
+"Keep chasing your dreams. I'll always be rooting for you."
+];
+function pop(el,i){if(el.classList.contains('popped'))return;el.classList.add('popped');document.getElementById('reveal').textContent=thoughts[i];}
+function blow(){document.querySelector('.cake').textContent='🍰';document.getElementById('cakeText').textContent='Wish made. Candles out. Make this year yours!';}
+let playing=false;
+function toggleMusic(){const a=document.getElementById('song'),b=document.getElementById('music');if(!a.src||a.src===location.href){b.textContent='♫ Add song.mp3 first';return;}if(playing){a.pause();b.textContent='♫ Play music';}else{a.play().then(()=>b.textContent='Ⅱ Pause music').catch(()=>b.textContent='Tap to play music');}playing=!playing;}
+</script>
+</body>
+</html>
